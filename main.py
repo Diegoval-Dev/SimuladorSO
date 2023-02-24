@@ -1,5 +1,8 @@
 import simpy
-from proceso import Proceso
+import random
+
+
+
 print("Hello, world")
 """
 def car(env):
@@ -16,3 +19,11 @@ env.process(car(env))
 env.run(until=50)
 """
 
+def proceso(env, cantRam, cantInstrucciones):
+    global tiempo
+
+
+
+
+env = simpy.Environment()
+RAM = simpy.Container(env, init=100, capacity=100)
