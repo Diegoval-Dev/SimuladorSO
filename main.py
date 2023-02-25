@@ -47,14 +47,12 @@ def proceso(env, cantRam, cantInstrucciones, id_proceso, inst, operacion, memori
             yield env.timeout(operacion) # tiempo en cada operación
             print(f"{id_proceso} proces en cola [READY] en tiempo {env.now}. Cantidad de instrucciones pendientes {cantInstrucciones}") # Utilizando f-strings
 
-        
-
-    
-    
-    
-    
-    
-    
+        #representación lógica para mover los procesos a la cola de espera si quedan instrucciones pendientes
+        if cantidad_instrucciones > 0 and random.randint(1, 2) == 1:
+            # si quedan instrucciones pendientes, mover a la cola de espera
+            print(f"{id_proceso} ha ingresado a la cola [WAITING]") # Utilizando f-strings
+            yield env.timeout(random.randint(1, 5)) #espera un tiempo aleatorio (entre 1 y 5 unidades de tiempo)
+  
     
     
     # Encargado de llevar un registro del tiempo en que un proceso es eliminado y devuelve la cantidad de memoria que se liberó
