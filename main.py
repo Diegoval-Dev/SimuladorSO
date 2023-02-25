@@ -19,6 +19,7 @@ env.process(car(env))
 env.run(until=50)
 """
 
+
 init = 100 
 capacity = 100 #ram memory capacity (100 y 200)
 time_ini = 0
@@ -29,7 +30,7 @@ procesos_cant = 25  #number of processes (25,50,100,150 y 200)
 
 def proceso(env, cantRam, cantInstrucciones, id_proceso, inst, operacion, memoria_disponible, acceso_procesador, tiempo_inicio):
     inicial_proced =env.now 
-   
+    #yield env.timeout(tiempo_inicio)
     
     
     
