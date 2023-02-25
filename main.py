@@ -29,12 +29,32 @@ operacion = 1 #operaciones por ciclo
 procesos_cant = 25  #number of processes (25,50,100,150 y 200)
 
 def proceso(env, cantRam, cantInstrucciones, id_proceso, inst, operacion, memoria_disponible, acceso_procesador, tiempo_inicio):
+        
+    # Utilizando f-strings
+    # El código muestra información del proceso nuevo en cola con la cantidad de RAM requerida y disponible
     yield env.timeout(tiempo_inicio)
     
-    # Utilizando f-strings
     print(f"Proceso {id_proceso} en cola [NEW]. Tiempo: {env.now}. Cantidad de RAM requerida: {cantRam}. Cantidad de RAM disponible: {memoria_disponible.level}") # Representa la memoria RAM disponible para ser utilizada por los procesos en la simulación
     yield memoria_disponible .get(cantRam)
     print(f"Proceso {id_proceso} en cola [READY] en tiempo {env.now}. Cantidad de instrucciones pendientes: {cantInstrucciones}")
+    
+    #Se ejecuta mientras la cantidad de instrucciones pendientes sea mayor a cero
+    while cantInstrucciones > 0:
+        #procesamiento de instrucciones en un procesador
+        with acceso_procesador.request() as req:
+            yield req
+            cantidad_instrucciones -= inst
+            yield env.timeout(operacion) # tiempo en cada operación
+            print(f"{id_proceso} proces en cola [READY] en tiempo {env.now}. Cantidad de instrucciones pendientes {cantInstrucciones}") # Utilizando f-strings
+
+        
+
+    
+    
+    
+    
+    
+    
     
     
     # Encargado de llevar un registro del tiempo en que un proceso es eliminado y devuelve la cantidad de memoria que se liberó
