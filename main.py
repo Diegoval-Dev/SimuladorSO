@@ -40,8 +40,8 @@ def proceso(env, cantRam, cantInstrucciones, id_proceso, inst, operacion, memori
     # Encargado de llevar un registro del tiempo en que un proceso es eliminado y devuelve la cantidad de memoria que se liberó
     inicial_proced = env.now 
     yield memoria_disponible .put(cantRam)
-    global tiempo_total
-    tiempo_total += env.now - inicial_proced
+    global time_ini
+    time_ini += env.now - inicial_proced
     print(f"{id_proceso} proceso [TERMINATED] en tiempo {env.now}. Cantidad de RAM devuelta: {cantRam}. Cantidad de memoria disponible: {memoria_disponible.level}")
     
     
