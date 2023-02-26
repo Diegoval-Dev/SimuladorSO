@@ -3,7 +3,8 @@ import simpy
 
 
 
-print("Simulación en curso")
+
+print("--------------------Simulación en curso--------------------")
 """
 def car(env):
      while True:
@@ -27,6 +28,7 @@ rango = 10 #Intervalos (1 y 5)
 inst = 3 #instrucciones del ciclo (6)
 operacion = 1 #operaciones por ciclo
 procesos_cant = 25  #number of processes (25,50,100,150 y 200)
+
 
 
 
@@ -71,6 +73,7 @@ env = simpy.Environment() #entorno de simulación
 memoria_disponible = simpy.Container(env, capacity, capacity) #capacidad inicial y máxima igual a capacity.
 acceso_procesador = simpy.Resource(env, capacity=1 )
 
+
 #Cada proceso se genera con una cantidad random de instrucciones y RAM requerida
 for i in range(procesos_cant): #(25,50,100,150 y 200)
     tiempo_inicio = random.expovariate(1/10)  # valor random que representa el tiempo de inicio de un proceso
@@ -84,4 +87,5 @@ for i in range(procesos_cant): #(25,50,100,150 y 200)
 env.run()
 promed = time_ini/procesos_cant
 print(f"El tiempo promedio de finalización de los procesos es de {promed:.0f} segundos")
+
 
