@@ -28,10 +28,12 @@ inst = 3 #instrucciones del ciclo (6)
 operacion = 1 #operaciones por ciclo
 procesos_cant = 25  #number of processes (25,50,100,150 y 200)
 
+
 def proceso(env, cantRam, cantInstrucciones, id_proceso, inst, operacion, memoria_disponible, acceso_procesador, tiempo_inicio):
         
     # Utilizando f-strings
     # El código muestra información del proceso nuevo en cola con la cantidad de RAM requerida y disponible
+    global time_ini #variable global
     yield env.timeout(tiempo_inicio)
     
     print(f"Proceso {id_proceso} en cola [NEW]. Tiempo: {env.now}. Cantidad de RAM requerida: {cantRam}. Cantidad de RAM disponible: {memoria_disponible.level}") # Representa la memoria RAM disponible para ser utilizada por los procesos en la simulación
@@ -48,18 +50,16 @@ def proceso(env, cantRam, cantInstrucciones, id_proceso, inst, operacion, memori
             print(f"{id_proceso} proces en cola [READY] en tiempo {env.now}. Cantidad de instrucciones pendientes {cantInstrucciones}") # Utilizando f-strings
 
         #representación lógica para mover los procesos a la cola de espera si quedan instrucciones pendientes
-        if cantidad_instrucciones > 0 and random.randint(1, 2) == 1:
+        if cantidad_instrucciones > 0 and random.randint(1, 2) == 1: 
             # si quedan instrucciones pendientes, mover a la cola de espera
             print(f"{id_proceso} ha ingresado a la cola [WAITING]") # Utilizando f-strings
             yield env.timeout(random.randint(1, 5)) #espera un tiempo aleatorio (entre 1 y 5 unidades de tiempo)
   
     
-    
     # Encargado de llevar un registro del tiempo en que un proceso es eliminado y devuelve la cantidad de memoria que se liberó
-    inicial_proced = env.now 
     yield memoria_disponible .put(cantRam)
-    global time_ini
-    time_ini += env.now - inicial_proced
+    inicial_proced = env.now 
+    time_ini += env.now - inicial_proced #calculando el tiempo transcurrido desde que inició el proceso
     print(f"{id_proceso} proceso [TERMINATED] en tiempo {env.now}. Cantidad de RAM devuelta: {cantRam}. Cantidad de memoria disponible: {memoria_disponible.level}")
     
     
