@@ -29,15 +29,18 @@ operacion = 1 #operaciones por ciclo
 procesos_cant = 25  #number of processes (25,50,100,150 y 200)
 
 
+
+
 def proceso(env, cantRam, cantInstrucciones, id_proceso, inst, operacion, memoria_disponible, acceso_procesador, tiempo_inicio):
-        
+    
     # Utilizando f-strings
     # El código muestra información del proceso nuevo en cola con la cantidad de RAM requerida y disponible
     global time_ini #variable global
     yield env.timeout(tiempo_inicio)
+       
     
     print(f"Proceso {id_proceso} en cola [NEW]. Tiempo: {env.now}. Cantidad de RAM requerida: {cantRam}. Cantidad de RAM disponible: {memoria_disponible.level}") # Representa la memoria RAM disponible para ser utilizada por los procesos en la simulación
-    yield memoria_disponible .get(cantRam)
+    yield memoria_disponible.get(cantRam)
     print(f"Proceso {id_proceso} en cola [READY] en tiempo {env.now}. Cantidad de instrucciones pendientes: {cantInstrucciones}")
     
     #Se ejecuta mientras la cantidad de instrucciones pendientes sea mayor a cero
@@ -72,11 +75,13 @@ acceso_procesador = simpy.Resource(env, capacity=1 )
 for i in range(procesos_cant): #(25,50,100,150 y 200)
     tiempo_inicio = random.expovariate(1/10)  # valor random que representa el tiempo de inicio de un proceso
     cantInstrucciones = random.randint(1, 10)  # genera una cantidad random de instrucciones 
+    cantRam = random.randint(1, 10)  # genera una cantidad random de RAM 
+    env.process(proceso(env=env, tiempo_inicio=tiempo_inicio, id_proceso=f"Proceso {i}", cantRam=cantRam, cantInstrucciones=cantInstrucciones, inst=inst, operacion=operacion , memoria_disponible=memoria_disponible, acceso_procesador=acceso_procesador)) #crea un nuevo proceso en la simulación y se agrega a env
 
 
 # Ejecutar la simulación
 #Calcula y muestra el tiempo promedio
 env.run()
 promed = time_ini/procesos_cant
-print(f"El tiempo promedio de finalización de los procesos es de {promed:d} segundos")
+print(f"El tiempo promedio de finalización de los procesos es de {promed:.0f} segundos")
 
