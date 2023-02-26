@@ -39,9 +39,9 @@ def proceso(env, cantRam, cantInstrucciones, id_proceso, inst, operacion, memori
     yield env.timeout(tiempo_inicio)
        
     
-    print(f"Proceso {id_proceso} en cola [NEW]. Tiempo: {env.now}. Cantidad de RAM requerida: {cantRam}. Cantidad de RAM disponible: {memoria_disponible.level}") # Representa la memoria RAM disponible para ser utilizada por los procesos en la simulación
+    print(f"Proceso {id_proceso} en cola [NEW]. Tiempo: {env.now:.1f}. Cantidad de RAM requerida: {cantRam}. Cantidad de RAM disponible: {memoria_disponible.level}") # Representa la memoria RAM disponible para ser utilizada por los procesos en la simulación
     yield memoria_disponible.get(cantRam)
-    print(f"Proceso {id_proceso} en cola [READY] en tiempo {env.now}. Cantidad de instrucciones pendientes: {cantInstrucciones}")
+    print(f"Proceso {id_proceso} en cola [READY] en tiempo {env.now:.1f}. Cantidad de instrucciones pendientes: {cantInstrucciones}")
     
     #Se ejecuta mientras la cantidad de instrucciones pendientes sea mayor a cero
     while cantInstrucciones > 0:
@@ -50,7 +50,7 @@ def proceso(env, cantRam, cantInstrucciones, id_proceso, inst, operacion, memori
             yield req
             cantInstrucciones  -= inst
             yield env.timeout(operacion) # tiempo en cada operación
-            print(f"{id_proceso} proces en cola [READY] en tiempo {env.now}. Cantidad de instrucciones pendientes {cantInstrucciones}") # Utilizando f-strings
+            print(f"{id_proceso} proces en cola [READY] en tiempo {env.now:.1f}. Cantidad de instrucciones pendientes {cantInstrucciones}") # Utilizando f-strings
 
         #representación lógica para mover los procesos a la cola de espera si quedan instrucciones pendientes
         if cantInstrucciones  > 0 and random.randint(1, 2) == 1: 
@@ -61,9 +61,9 @@ def proceso(env, cantRam, cantInstrucciones, id_proceso, inst, operacion, memori
     
     # Encargado de llevar un registro del tiempo en que un proceso es eliminado y devuelve la cantidad de memoria que se liberó
     yield memoria_disponible .put(cantRam)
-    inicial_proced = env.now 
-    time_ini += env.now - inicial_proced #calculando el tiempo transcurrido desde que inició el proceso
-    print(f"{id_proceso} proceso [TERMINATED] en tiempo {env.now}. Cantidad de RAM devuelta: {cantRam}. Cantidad de memoria disponible: {memoria_disponible.level}")
+    time_ini = int(env.now)
+    time_ini += env.now - time_ini #calculando el tiempo transcurrido desde que inició el proceso
+    print(f"{id_proceso} proceso [TERMINATED] en tiempo {env.now:.1f}. Cantidad de RAM devuelta: {cantRam}. Cantidad de memoria disponible: {memoria_disponible.level}")
     
   
 env = simpy.Environment() #entorno de simulación
