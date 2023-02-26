@@ -72,6 +72,11 @@ acceso_procesador = simpy.Resource(env, capacity=1 )
 for i in range(procesos_cant): #(25,50,100,150 y 200)
     tiempo_inicio = random.expovariate(1/10)  # valor random que representa el tiempo de inicio de un proceso
     cantInstrucciones = random.randint(1, 10)  # genera una cantidad random de instrucciones 
-   
 
+
+# Ejecutar la simulación
+#Calcula y muestra el tiempo promedio
+env.run()
+promed = time_ini/procesos_cant
+print(f"El tiempo promedio de finalización de los procesos es de {promed:d} segundos")
 
