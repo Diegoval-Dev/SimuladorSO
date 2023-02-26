@@ -45,12 +45,12 @@ def proceso(env, cantRam, cantInstrucciones, id_proceso, inst, operacion, memori
         #procesamiento de instrucciones en un procesador
         with acceso_procesador.request() as req:
             yield req
-            cantidad_instrucciones -= inst
+            cantInstrucciones  -= inst
             yield env.timeout(operacion) # tiempo en cada operación
             print(f"{id_proceso} proces en cola [READY] en tiempo {env.now}. Cantidad de instrucciones pendientes {cantInstrucciones}") # Utilizando f-strings
 
         #representación lógica para mover los procesos a la cola de espera si quedan instrucciones pendientes
-        if cantidad_instrucciones > 0 and random.randint(1, 2) == 1: 
+        if cantInstrucciones  > 0 and random.randint(1, 2) == 1: 
             # si quedan instrucciones pendientes, mover a la cola de espera
             print(f"{id_proceso} ha ingresado a la cola [WAITING]") # Utilizando f-strings
             yield env.timeout(random.randint(1, 5)) #espera un tiempo aleatorio (entre 1 y 5 unidades de tiempo)
@@ -62,9 +62,16 @@ def proceso(env, cantRam, cantInstrucciones, id_proceso, inst, operacion, memori
     time_ini += env.now - inicial_proced #calculando el tiempo transcurrido desde que inició el proceso
     print(f"{id_proceso} proceso [TERMINATED] en tiempo {env.now}. Cantidad de RAM devuelta: {cantRam}. Cantidad de memoria disponible: {memoria_disponible.level}")
     
-
+  
 env = simpy.Environment() #entorno de simulación
 #cantidad de memoria disponible en la simulación
 memoria_disponible = simpy.Container(env, capacity, capacity) #capacidad inicial y máxima igual a capacity.
 acceso_procesador = simpy.Resource(env, capacity=1 )
+
+#Cada proceso se genera con una cantidad random de instrucciones y RAM requerida
+for i in range(procesos_cant): #(25,50,100,150 y 200)
+    tiempo_inicio = random.expovariate(1/10)  # valor random que representa el tiempo de inicio de un proceso
+    cantInstrucciones = random.randint(1, 10)  # genera una cantidad random de instrucciones 
+   
+
 
