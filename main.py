@@ -62,20 +62,9 @@ def proceso(env, cantRam, cantInstrucciones, id_proceso, inst, operacion, memori
     time_ini += env.now - inicial_proced #calculando el tiempo transcurrido desde que inició el proceso
     print(f"{id_proceso} proceso [TERMINATED] en tiempo {env.now}. Cantidad de RAM devuelta: {cantRam}. Cantidad de memoria disponible: {memoria_disponible.level}")
     
-    
-    
-    
-    
-    
-    
 
+env = simpy.Environment() #entorno de simulación
+#cantidad de memoria disponible en la simulación
+memoria_disponible = simpy.Container(env, capacity, capacity) #capacidad inicial y máxima igual a capacity.
+acceso_procesador = simpy.Resource(env, capacity=1 )
 
-
-
-    
-    
-    
-"""   
-env = simpy.Environment()
-RAM = simpy.Container(env, init=100, capacity=100)
-"""   
