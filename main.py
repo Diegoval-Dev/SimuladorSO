@@ -1,5 +1,6 @@
 import random
 import simpy
+import numpy
 
 # Referencias de https://simpy.readthedocs.io/en/latest/api_reference/simpy.resources.html
 
@@ -10,6 +11,7 @@ print("--------------------Simulación en curso--------------------")
 print(" ")
 print(" ")
 
+arr = []
 #init = 100 
 capacity = 100 #ram memory capacity (100 y 200)
 time_ini = 0
@@ -52,7 +54,8 @@ def proceso(env, cantRam, cantInstrucciones, id_proceso, inst, operacion, memori
     # Encargado de llevar un registro del tiempo en que un proceso es eliminado y devuelve la cantidad de memoria que se liberó
     yield memoria_disponible .put(cantRam)
     time_ini = int(env.now)
-    time_ini += env.now - time_ini #calculando el tiempo transcurrido desde que inició el proceso
+    tiempo_individual = env.now - time_ini #calculando el tiempo transcurrido desde que inició el proceso
+    arr.append(tiempo_individual)
     print(f" {id_proceso}, proceso [TERMINATED] en tiempo {env.now:.1f}. Cantidad de RAM devuelta: {cantRam}. Cantidad de memoria disponible: {memoria_disponible.level}")
     
 # nuevo objeto de la clase Environment  
@@ -76,5 +79,6 @@ for c in range(procesos_cant): #(25,50,100,150 y 200)
 # Ejecutar la simulación
 #Calcula y muestra el tiempo promedio
 env.run()
-promed = time_ini/procesos_cant
-print(f"El tiempo promedio de finalización de los procesos es de {promed:.0f} segundos")
+promed = numpy.mean(arr)
+desviacion = numpy.std(arr)
+print(f"El tiempo promedio de finalización de los procesos es de {promed} segundos con una desviacion estandar de {desviacion}")
