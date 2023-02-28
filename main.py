@@ -13,12 +13,12 @@ print(" ")
 
 arr = []
 #init = 100 
-capacity = 100 #ram memory capacity (100 y 200)
+capacity = 200 #ram memory capacity (100 y 200)
 time_ini = 0
 rango = 10 #Intervalos (1, 5, 10)
 inst = 3 #instrucciones del ciclo (3, 6)
 operacion = 1 #operaciones por ciclo
-procesos_cant = 25  #number of processes (25,50,100,150 y 200)
+procesos_cant = 50  #number of processes (25,50,100,150 y 200)
 cant_procesadores = 1
 
 
@@ -29,11 +29,14 @@ def proceso(env, cantRam, cantInstrucciones, id_proceso, inst, operacion, memori
     # El código muestra información del proceso nuevo en cola con la cantidad de RAM requerida y disponible
     global time_ini #variable global
     
+    
     yield env.timeout(tiempo_inicio)
+    tiempo_inicio_Individual = env.now
     # Utilizando f-strings
     print(f" {id_proceso}, en cola [NEW]. Tiempo: {env.now:.1f}. Cantidad de RAM requerida: {cantRam}. Cantidad de RAM disponible: {memoria_disponible.level}") # Representa la memoria RAM disponible para ser utilizada por los procesos en la simulación
     yield memoria_disponible.get(cantRam)
     print(f" {id_proceso}, en cola [READY] en tiempo {env.now:.1f}. Cantidad de instrucciones pendientes: {cantInstrucciones}")
+
     
     #Se ejecuta mientras la cantidad de instrucciones pendientes sea mayor a cero
     while cantInstrucciones > 0:
@@ -52,10 +55,8 @@ def proceso(env, cantRam, cantInstrucciones, id_proceso, inst, operacion, memori
   
     
     # Encargado de llevar un registro del tiempo en que un proceso es eliminado y devuelve la cantidad de memoria que se liberó
-    yield memoria_disponible .put(cantRam)
-    time_ini = int(env.now)
-    tiempo_individual = env.now - time_ini #calculando el tiempo transcurrido desde que inició el proceso
-    arr.append(tiempo_individual)
+    yield memoria_disponible.put(cantRam)
+    arr.append(tiempo_inicio_Individual)
     print(f" {id_proceso}, proceso [TERMINATED] en tiempo {env.now:.1f}. Cantidad de RAM devuelta: {cantRam}. Cantidad de memoria disponible: {memoria_disponible.level}")
     
 # nuevo objeto de la clase Environment  
