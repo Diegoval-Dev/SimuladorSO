@@ -1,29 +1,16 @@
 import random
 import simpy
 
+# Referencias de https://simpy.readthedocs.io/en/latest/api_reference/simpy.resources.html
 
 
-
-
-"""
-def car(env):
-     while True:
-        print('Start parking at %d' % env.now)
-        parking_duration = 5
-        yield env.timeout(parking_duration)
-        print('Start driving at %d' % env.now)
-        trip_duration = 2
-        yield env.timeout(trip_duration)
-
-env = simpy.Environment()
-env.process(car(env))
-env.run(until=50)
-"""
-
-
+print(" ")
+print(" ")
 print("--------------------Simulación en curso--------------------")
+print(" ")
+print(" ")
 
-## init = 100 
+#init = 100 
 capacity = 100 #ram memory capacity (100 y 200)
 time_ini = 0
 rango = 10 #Intervalos (1, 5, 10)
@@ -41,9 +28,9 @@ def proceso(env, cantRam, cantInstrucciones, id_proceso, inst, operacion, memori
     
     yield env.timeout(tiempo_inicio)
     # Utilizando f-strings
-    print(f"Proceso {id_proceso} en cola [NEW]. Tiempo: {env.now:.1f}. Cantidad de RAM requerida: {cantRam}. Cantidad de RAM disponible: {memoria_disponible.level}") # Representa la memoria RAM disponible para ser utilizada por los procesos en la simulación
+    print(f" {id_proceso}, en cola [NEW]. Tiempo: {env.now:.1f}. Cantidad de RAM requerida: {cantRam}. Cantidad de RAM disponible: {memoria_disponible.level}") # Representa la memoria RAM disponible para ser utilizada por los procesos en la simulación
     yield memoria_disponible.get(cantRam)
-    print(f"Proceso {id_proceso} en cola [READY] en tiempo {env.now:.1f}. Cantidad de instrucciones pendientes: {cantInstrucciones}")
+    print(f" {id_proceso}, en cola [READY] en tiempo {env.now:.1f}. Cantidad de instrucciones pendientes: {cantInstrucciones}")
     
     #Se ejecuta mientras la cantidad de instrucciones pendientes sea mayor a cero
     while cantInstrucciones > 0:
@@ -52,12 +39,12 @@ def proceso(env, cantRam, cantInstrucciones, id_proceso, inst, operacion, memori
             yield solicitud
             cantInstrucciones  -= inst
             yield env.timeout(operacion) # tiempo en cada operación
-            print(f"{id_proceso} proces en cola [READY] en tiempo {env.now:.1f}. Cantidad de instrucciones pendientes {cantInstrucciones}") # Utilizando f-strings
+            print(f" {id_proceso}, proceso en cola [READY] en tiempo {env.now:.1f}. Cantidad de instrucciones pendientes {cantInstrucciones}") # Utilizando f-strings
 
         #representación lógica para mover los procesos a la cola de espera si quedan instrucciones pendientes
         if cantInstrucciones  > 0 and random.randint(1, 2) == 1: 
             # si quedan instrucciones pendientes, mover a la cola de espera
-            print(f"{id_proceso} ha ingresado a la cola [WAITING]") # Utilizando f-strings
+            print(f" {id_proceso}, ha ingresado a la cola [WAITING]") # Utilizando f-strings
             yield env.timeout(random.randint(1, 5)) #espera un tiempo aleatorio (entre 1 y 5 unidades de tiempo)
   
     
@@ -65,22 +52,24 @@ def proceso(env, cantRam, cantInstrucciones, id_proceso, inst, operacion, memori
     yield memoria_disponible .put(cantRam)
     time_ini = int(env.now)
     time_ini += env.now - time_ini #calculando el tiempo transcurrido desde que inició el proceso
-    print(f"{id_proceso} proceso [TERMINATED] en tiempo {env.now:.1f}. Cantidad de RAM devuelta: {cantRam}. Cantidad de memoria disponible: {memoria_disponible.level}")
+    print(f" {id_proceso}, proceso [TERMINATED] en tiempo {env.now:.1f}. Cantidad de RAM devuelta: {cantRam}. Cantidad de memoria disponible: {memoria_disponible.level}")
     
-  
+# nuevo objeto de la clase Environment  
 env = simpy.Environment() #entorno de simulación
 #cantidad de memoria disponible en la simulación
-memoria_disponible = simpy.Container(env, capacity, capacity) 
+memoria_disponible = simpy.Container(env, capacity, capacity)
 acceso_procesador = simpy.Resource(env, capacity=1 )
 
 
 #Cada proceso se genera con una cantidad random de instrucciones y RAM requerida
-for i in range(procesos_cant): #(25,50,100,150 y 200)
+for c in range(procesos_cant): #(25,50,100,150 y 200)
+    
     #representa el tiempo de llegada del siguiente proceso a la simulación.
+    #https://www.geeksforgeeks.org/random-expovariate-function-in-python/
     tiempo_inicio = random.expovariate(1.0/rango)  # valor random que representa el tiempo de inicio random de un proceso
     cantInstrucciones = random.randint(1, 10)  # genera una cantidad random de instrucciones 
     cantRam = random.randint(1, 10)  # genera una cantidad random de RAM 
-    env.process(proceso(env=env, tiempo_inicio=tiempo_inicio, id_proceso=f"Proceso {i}", cantRam=cantRam, cantInstrucciones=cantInstrucciones, inst=inst, operacion=operacion , memoria_disponible=memoria_disponible, acceso_procesador=acceso_procesador)) #crea un nuevo proceso en la simulación y se agrega a env
+    env.process(proceso(env=env, tiempo_inicio=tiempo_inicio, id_proceso=f"Proceso {c}", cantRam=cantRam, cantInstrucciones=cantInstrucciones, inst=inst, operacion=operacion , memoria_disponible=memoria_disponible, acceso_procesador=acceso_procesador)) #crea un nuevo proceso en la simulación y se agrega a env
 
 
 # Ejecutar la simulación
@@ -88,5 +77,3 @@ for i in range(procesos_cant): #(25,50,100,150 y 200)
 env.run()
 promed = time_ini/procesos_cant
 print(f"El tiempo promedio de finalización de los procesos es de {promed:.0f} segundos")
-
-
