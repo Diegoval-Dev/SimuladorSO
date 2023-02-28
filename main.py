@@ -17,6 +17,7 @@ rango = 10 #Intervalos (1, 5, 10)
 inst = 3 #instrucciones del ciclo (3, 6)
 operacion = 1 #operaciones por ciclo
 procesos_cant = 25  #number of processes (25,50,100,150 y 200)
+cant_procesadores = 1
 
 
 
@@ -58,7 +59,7 @@ def proceso(env, cantRam, cantInstrucciones, id_proceso, inst, operacion, memori
 env = simpy.Environment() #entorno de simulación
 #cantidad de memoria disponible en la simulación
 memoria_disponible = simpy.Container(env, capacity, capacity)
-acceso_procesador = simpy.Resource(env, capacity=1 )
+acceso_procesador = simpy.Resource(env, cant_procesadores )
 
 
 #Cada proceso se genera con una cantidad random de instrucciones y RAM requerida
